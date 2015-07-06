@@ -1,7 +1,7 @@
 close all
 clear
 addpath('../../Incoherency/Diagonal-Relation/Incoherency-Functions')
-tic
+
 %% Create a 3d blending matrix
 
 % * b must be a divisor of Nsx = 21 -> The blending matrix is can descibe 3d blending
@@ -18,7 +18,7 @@ pattern = 0;    % Blending pattern (Time + Space)
 % Vary tg = 1,10,50,100
 % incoherency bxtg
 incoherency = zeros(4,4);
-
+time = zeros(size(incoherency));
 
 % Patterns:
 % 0     Time
@@ -31,14 +31,19 @@ ind_b = 1;
 ind_tg = 1;
 
 for b = [1,3,7,21]
+    
     for tg = [1,10,50,100]
+        
+        sprintf('b = %d, tg = %d.',b,tg)
+        
+        tic;
         
         [G3,g3] = crane(Ns,Nt,b,tg,pattern);
         
         
         g = g3dto2d(g3);
-        
-        figure; imagesc(g);
+        path = strcat('g-matrices/','tg',num2str(tg),'-b',num2str(b),'.mat');
+        save(path,'g')
         
         %% Compute GGH, sum along diagonals, and sum over all frequency components
         
@@ -66,14 +71,20 @@ for b = [1,3,7,21]
         % Ideally the output is the autocorrelation with respect to source lag
         autocorr = sum(diagsum,2);
         
-        figure(2); plot( autocorr(:,1) ); title('autocorrelation for summed frequencies');
-        figure(3); plot( diagsum(:,3) ); title('autocorrelation of w = 3');
+%         figure(2); plot( autocorr(:,1) ); title('autocorrelation for summed frequencies');
+%         figure(3); plot( diagsum(:,3) ); title('autocorrelation of w = 3');
         
         
         in = autocorr(Ns,1)^2 / sum(autocorr.^2);
+        
         incoherency(ind_b,ind_tg) = in;
+        time(ind_b,ind_tg) = toc;
+        
         ind_tg = ind_tg + 1;
+ 
     end
     ind_b = ind_b + 1;
 end
-toc
+
+save('Parameters/incoherency.mat','incoherency');
+save('Parameters/time.mat','time');
