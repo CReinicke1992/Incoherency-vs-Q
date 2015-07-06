@@ -14,11 +14,6 @@ tg  = 100;      % Maximum time delay in time samples
 Nt  = 301;      % Number of time samples
 pattern = 0;    % Blending pattern (Time + Space)
 
-% Vary b = 1,3,7,21
-% Vary tg = 1,10,50,100
-% incoherency bxtg
-incoherency = zeros(4,4);
-time = zeros(size(incoherency));
 
 % Patterns:
 % 0     Time
@@ -27,13 +22,44 @@ time = zeros(size(incoherency));
 % 3     Space
 % 4     None
 
-ind_b = 1;
-for b = [3,1]
+% Exerimentally combinations for different incoherency values
+%                   % Incoherency (%)
+b_tg = [ 63, 7;     % 5
+         21, 2;     % 10
+         21, 5;     % 15
+         21, 7;     % 20
+         21, 10;    % 25
+         21, 12;    % 30 
+         21, 14;    % 35
+         21, 17;    % 40
+         21, 21;    % 45
+         21, 23;    % 50
+         21, 27;    % 55
+         21, 31;    % 60 
+         21, 38;    % 65
+         21, 45;    % 70
+         21, 53;    % 75
+         7 , 14;    % 80
+         7 , 19;    % 85
+         7 , 24;    % 90
+         7 , 45;    % 95
+         3 , 200 ]; % 100
+     
+reps = 10; % Repetitions per incoherency
+
+% incoherency: tg/b combi x repetition
+incoherency = zeros(size(b_tg,1),reps);
+time = zeros(size(incoherency));
+
+
+for iter = 1:size(b_tg,1)
     
-    ind_tg = 1;
-    for tg = [200,10,50,100]
+    b = b_tg(iter,1);
+    tg = b_tg(iter,2);
+    
+    for rep = 1:reps
         
-        sprintf('b = %d, tg = %d.',b,tg)
+        sprintf('iter = %d / %d, rep = %d / %d',iter,size(b_tg,1),rep,reps)
         
         tic;
         
@@ -41,8 +67,8 @@ for b = [3,1]
         
         
         g = g3dto2d(g3);
-        path = strcat('g-matrices/','tg',num2str(tg),'-b',num2str(b),'.mat');
-        %save(path,'g')
+        path = strcat('g-matrices/','in',num2str(iter*5),'-rep',num2str(rep),'.mat');
+        save(path,'g')
         
         %% Compute GGH, sum along diagonals, and sum over all frequency components
         
@@ -69,20 +95,12 @@ for b = [3,1]
         % Sum over all frequency components
         % Ideally the output is the autocorrelation with respect to source lag
         autocorr = sum(diagsum,2);
-        
-%         figure(2); plot( autocorr(:,1) ); title('autocorrelation for summed frequencies');
-%         figure(3); plot( diagsum(:,3) ); title('autocorrelation of w = 3');
-        
-        
+     
         in = autocorr(Ns,1)^2 / sum(autocorr.^2);
         
-        incoherency(ind_b,ind_tg) = in;
-        time(ind_b,ind_tg) = toc;
-        
-        ind_tg = ind_tg + 1;
-        return
+        incoherency(iter,rep) = in;
+        time(iter,rep) = toc;
     end
-    ind_b = ind_b + 1;
 end
 
 save('Parameters/incoherency.mat','incoherency');
