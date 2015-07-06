@@ -9,7 +9,7 @@ addpath('../../Incoherency/Diagonal-Relation/Incoherency-Functions')
 % Parameters
 Ns  = 1071;     % Number of sources
 b   = 3;        % Blending factor
-dt  = 0.002;    % Sampling rate: Seconds per sample
+dt  = 0.004;    % Sampling rate: Seconds per sample
 tg  = 100;      % Maximum time delay in time samples
 Nt  = 301;      % Number of time samples
 pattern = 0;    % Blending pattern (Time + Space)
@@ -28,11 +28,10 @@ time = zeros(size(incoherency));
 % 4     None
 
 ind_b = 1;
-ind_tg = 1;
-
-for b = [1,3,7,21]
+for b = [3,1]
     
-    for tg = [1,10,50,100]
+    ind_tg = 1;
+    for tg = [200,10,50,100]
         
         sprintf('b = %d, tg = %d.',b,tg)
         
@@ -43,7 +42,7 @@ for b = [1,3,7,21]
         
         g = g3dto2d(g3);
         path = strcat('g-matrices/','tg',num2str(tg),'-b',num2str(b),'.mat');
-        save(path,'g')
+        %save(path,'g')
         
         %% Compute GGH, sum along diagonals, and sum over all frequency components
         
@@ -81,7 +80,7 @@ for b = [1,3,7,21]
         time(ind_b,ind_tg) = toc;
         
         ind_tg = ind_tg + 1;
- 
+        return
     end
     ind_b = ind_b + 1;
 end
