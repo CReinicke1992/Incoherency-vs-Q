@@ -45,6 +45,8 @@ b_tg = [ 63, 7;     % 5
          7 , 45;    % 95
          3 , 200 ]; % 100
      
+%save('Parameters/Blending_pars.mat','b_tg');return
+     
 reps = 10; % Repetitions per incoherency
 
 % incoherency: tg/b combi x repetition
