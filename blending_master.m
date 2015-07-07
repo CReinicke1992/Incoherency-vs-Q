@@ -41,23 +41,17 @@ incoherency = in.incoherency; clear in
 [in,reps] = size(incoherency);
 
 % Quality matrix
-Q = zeros(size(incoherency));
+Q = zeros(in,reps);
 
 % Time matrix
-time = zeros(size(incoherency));
+time = zeros(in,reps);
 
-% Blending parameters
-blend_pars = load('Parameters/Blending_pars.mat');
-b_tg = blend_pars.b_tg; clear blend_pars
 
 %% 3 Iterate over all g matrices
 
 total = tic;
 
 for iter = 1:in
-  
-    % Blending factor
-    b = b_tg(iter,1);
     
     for rep = 1:reps
         

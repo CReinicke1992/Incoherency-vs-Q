@@ -1,10 +1,27 @@
-% Locarion: /Users/christianreinicke/Dropbox/MasterSemester/SyntheticData/Deblending/Functions
-% It is assumed that this function is called from the folder 'Deblending'
-% The function loads data, fkmask and parameters automatically
-% The input variables should allow to use different blending designs
 
+% * Modified version of /Users/christianreinicke/Dropbox/MasterSemester/SyntheticData/Deblending/Functions/blend_deblend.m
+% * Main differences:
+%   -> Data and fkmask are input parameters, they are not loaded in the
+%      function
+%   -> The results are not saved
+%   -> Only the quality factor is of interest
+%   -> Q is returned and saved in quality_master.m
+%   -> All g matrices are saved so if the data corresponding to a specific
+%      Q is needed the deblending can be done for this g matrix and saved 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % INPUT
+% * data    Unblended data in Delphi format
+% * Nri     Number of inline receivers
+% * Nsi     Number of inline sources
+% * fkmask  fkk mask (I think it can be Delphi or Cartesian format)
+% * g       Blending matrix (the format which is read by blend.m)
 
+% OUTPUT
+% * debl    Deblended data
+% * Q       Quality factor of the deblended data
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 function [debl,Q] = blend_deblend(data,Nri,Nsi,fkmask,g)
