@@ -1,7 +1,16 @@
-% data = load('Data/Data_red_Delphi_Bandlimited.mat');
-% p = data.data_fil3d;
-% 
-% figure; imagesc(squeeze(p(:,1,:)));
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PURPOSE
+
+% * Load g matrices with varying incoherencies
+% * Blend and deblend a data set with these g matrices
+% * Save all quality factors to compare deblending quality vs incoherency
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%% 1 Load Functions & data
+
+addpath('Functions/')
 
 
 % For simplicity load only a small part of the data
@@ -24,24 +33,35 @@ fileID = 'Data/fkmask_red.mat';
 FKmask = load(fileID); clear fileID
 fkmask = FKmask.mask; clear Fkmask
 
-
+%% 2 Load blending parameters & initialize quality + time matrices
 
 % Incoherency matrix
 in = load('Parameters/incoherency.mat');
 incoherency = in.incoherency; clear in
 [in,reps] = size(incoherency);
 
+% Quality matrix
+Q = zeros(size(incoherency));
+
+% Time matrix
+time = zeros(size(incoherency));
 
 % Blending parameters
 blend_pars = load('Parameters/Blending_pars.mat');
 b_tg = blend_pars.b_tg; clear blend_pars
 
+%% 3 Iterate over all g matrices
+
+total = tic;
+
 for iter = 1:in
-    
+  
     % Blending factor
     b = b_tg(iter,1);
     
     for rep = 1:reps
+        
+        loop = tic;
         
         % Indicate iteration numbers
         sprintf('iter = %d / %d, rep = %d / %d',iter,size(b_tg,1),rep,reps)
@@ -51,5 +71,21 @@ for iter = 1:in
         gamma = load(fileID);
         g = gamma.g; 
         
+        % Blend and deblend the data with g
+        [~,q] = blend_deblend(data,Nri,Nsi,fkmask,g);
+        
+        % Save quality factor and computing times
+        Q(iter,rep) = q;
+        t = toc(loop);
+        time(iter,rep) = t;
+        
     end
 end
+
+% Stop total time
+total_time = toc(total);
+
+% Save quality + time matrices and total computing time
+save('Parameters/quality.mat','Q');
+save('Parameters/deblending_time.mat','time');
+save('Parameters/total_time_blending_master.mat','total_time');
