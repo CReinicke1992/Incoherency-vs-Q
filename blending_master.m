@@ -19,6 +19,10 @@ Nri  = Parameters_red.Nri;   % Number of inline receivers
 Nsi  = Parameters_red.Nsi;   % Number of inline sources
 clear Parameters_red
 
+% Load the fkmask which is in Cartesian format
+fileID = 'Data/fkmask_red.mat';
+FKmask = load(fileID); clear fileID
+fkmask = FKmask.mask; clear Fkmask
 
 
 

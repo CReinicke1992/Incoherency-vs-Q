@@ -7,43 +7,16 @@
 
 
 
-function debl = blend_deblend(data,Nri,Nsi,g,path)
+function debl = blend_deblend(data,Nri,Nsi,fkmask,g,path)
 
 [Nt,Nr,Ns] = size(data);
+Ne = size(g,2);
+b = Ns/Ne;
 
-
-
-%% 2.2 Load Blending Parameters
-
-fileID    = 'Data/Blending_parameters.mat';
-blend_par = load(fileID); clear fileID
-pattern   = blend_par.pattern;  % Blending pattern
-b         = blend_par.b;        % Blending factor
-clear blend_par
-
-% Set a default path according to blending pattern
-if nargin < 2
-    if pattern == 0;
-        path = '/3Time/';
-    elseif pattern == 1;
-        path = '/4Space-Time-Experiment/';
-    elseif pattern == 2;
-        path = '/5Space-Time-Crossline/';
-    elseif pattern == 3;
-        path = '/2Space-Crossline/';
-    elseif pattern == 4;
-        path = '/1None/';
-    elseif pattern == 5;
-        path = '/6Space-Time-Fully/';
-    end
-end
 
 %% 3 Load the FK mask
 
-% Load the fkmask which is in Cartesian format
-fileID = 'Data/FK/fkmask_red.mat';
-FKmask = load(fileID); clear fileID
-fkmask = FKmask.mask; clear Fkmask
+
 
 %% 4 Pad data with zeros to avoid wrap arounds in time
 
