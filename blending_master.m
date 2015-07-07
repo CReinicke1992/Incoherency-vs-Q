@@ -58,7 +58,7 @@ for iter = 1:in
         loop = tic;
         
         % Indicate iteration numbers
-        sprintf('iter = %d / %d, rep = %d / %d',iter,size(b_tg,1),rep,reps)
+        sprintf('iter = %d / %d, rep = %d / %d',iter,in,rep,reps)
         
         % Load g matrix
         fileID = strcat('g-matrices/','in',num2str(iter*5),'-rep',num2str(rep),'.mat');
