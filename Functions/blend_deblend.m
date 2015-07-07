@@ -7,7 +7,7 @@
 
 
 
-function Q = blend_deblend(data,Nri,Nsi,fkmask,g)
+function [debl,Q] = blend_deblend(data,Nri,Nsi,fkmask,g)
 
 [Nt,Nr,Ns] = size(data);
 Ne = size(g,2);
