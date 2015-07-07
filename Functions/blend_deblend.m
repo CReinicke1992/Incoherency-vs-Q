@@ -93,9 +93,6 @@ clear data_ps n g
 % Output the deblended data
 debl = p(1:Nt,:,:); clear p
 
-% Absolute error of the deblended data
-% misfit = data(1:Nt,:,:) - debl;
-
 % Quantify the performance of the deblending based on Ibrahim
 Q = quality_factor(data(1:Nt,:,:),debl);
 
