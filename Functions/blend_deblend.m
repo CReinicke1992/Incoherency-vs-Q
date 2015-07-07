@@ -20,6 +20,10 @@ pad = max(g(:));
 
 % As inititally the function deblend.m expected an even t_g, I use an even
 % pad number to avoid stupid errors.
+% Possible idea: 
+% * fft performs better for odd number of time samples
+% * Assume data with an odd number of time samples is input
+% * Then an even tg guarantees that Nt remains odd
 if mod(pad,2) ~= 0
     pad = pad + 1;
 end
