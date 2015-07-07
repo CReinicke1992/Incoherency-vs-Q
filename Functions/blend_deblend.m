@@ -9,11 +9,14 @@
 
 function [debl,Q] = blend_deblend(data,Nri,Nsi,fkmask,g)
 
+
+%% 1 Define parameters
+
 [Nt,Nr,Ns] = size(data);
 Ne = size(g,2);
 b = Ns/Ne;
 
-%% 4 Pad data with zeros to avoid wrap arounds in time
+%% 2 Pad data with zeros to avoid wrap arounds in time
 
 % Maximum time shift
 pad = max(g(:)); 
@@ -37,12 +40,12 @@ p_new(1:Nt,:,:) = data;
 data            = p_new; clear p_new;
 
 
-%% 5 BLENDING
+%% 3 BLENDING
 
 % Blend
 data_bl = blend(data,g); 
 
-%% 6 DEBLENING
+%% 4 DEBLENING
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 % PREPARATION
