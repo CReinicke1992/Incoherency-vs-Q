@@ -7,16 +7,11 @@
 
 
 
-function debl = blend_deblend(data,Nri,Nsi,fkmask,g,path)
+function Q = blend_deblend(data,Nri,Nsi,fkmask,g)
 
 [Nt,Nr,Ns] = size(data);
 Ne = size(g,2);
 b = Ns/Ne;
-
-
-%% 3 Load the FK mask
-
-
 
 %% 4 Pad data with zeros to avoid wrap arounds in time
 
@@ -42,7 +37,6 @@ data            = p_new; clear p_new;
 
 % Blend
 data_bl = blend(data,g); 
-save(strcat('Data',path,'Blended.mat'),'data_bl');
 
 %% 6 DEBLENING
 
@@ -54,7 +48,6 @@ data_ps = blend(data_bl,-g',1/b); clear data_bl
 
 % Throw away data which cannot be correct
 data_ps(Nt+1:end,:,:) = 0;
-save(strcat('Data',path,'Pseudo-Deblended.mat'),'data_ps');
 
 % First estimate of the deblended data p
 p = data_ps;
@@ -99,13 +92,10 @@ clear data_ps n g
 
 % Output the deblended data
 debl = p(1:Nt,:,:); clear p
-save(strcat('Data',path,'Deblended.mat'),'debl')
 
 % Absolute error of the deblended data
-misfit = data(1:Nt,:,:) - debl;
-save(strcat('Data',path,'Misfit_data-debl.mat'),'misfit'); clear misfit
+% misfit = data(1:Nt,:,:) - debl;
 
 % Quantify the performance of the deblending based on Ibrahim
 Q = quality_factor(data(1:Nt,:,:),debl);
-save(strcat('Data',path,'QualityFactor.mat'),'Q');
 
