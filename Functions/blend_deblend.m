@@ -7,29 +7,11 @@
 
 
 
-function debl = blend_deblend(g,path)
+function debl = blend_deblend(data,Nri,Nsi,g,path)
 
-%% 1 Load data
-
-% For simplicity load only a small part of the data
-% Load the bandlimited data in Delphi format
-fileID  = 'Data/Data_red_Delphi_Bandlimited.mat';
-my_data = load(fileID); clear fileID
-data    = my_data.data_fil3d; clear my_data
-
-%% 2.1 Load general parameters
-
-% Load the paramteres which belong to the loaded data, in this case it is
-% the reduced data
-fileID = '../Parameters_red.mat';
-Parameters_red = load(fileID); clear fileID
+[Nt,Nr,Ns] = size(data);
 
 
-Nt   = Parameters_red.Nt;    % Number of time samples
-Nri  = Parameters_red.Nri;   % Number of inline receivers
-Nsi  = Parameters_red.Nsi;   % Number of inline sources
-Nr   = Parameters_red.Nr;    % Number of receivers
-Ns   = Parameters_red.Ns;    % Number of sources
 
 %% 2.2 Load Blending Parameters
 
